@@ -24,7 +24,7 @@ class MasterEditorMenu extends MusicBeatState
 		'Week Editor',
 		'Menu Character Editor',
 		'Dialogue Editor',
-		//'Dialogue Portrait Editor',
+		'Dialogue Portrait Editor',
 		'Character Editor',
 		'Chart Editor'
 	];

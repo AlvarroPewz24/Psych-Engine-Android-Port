@@ -197,48 +197,70 @@ class FlxRuntimeShader extends FlxShader
 	 */
 	public function new(fragmentSource:String = null, vertexSource:String = null):Void
 	{
+                
 		if (fragmentSource != null)
-		{
-			trace('Loading fragment source from argument...');
-			glFragmentSource = processFragmentSource(Assets.getText(fragmentSource));
-		}
-		else
 		{
 			trace('Loading default fragment source...');
 			glFragmentSource = processFragmentSource(DEFAULT_FRAGMENT_SOURCE);
 		}
-
-		if (vertexSource != null)
+		else
 		{
-			trace('Loading vertex source from argument...');
-			glVertexSource = processVertexSource(Assets.getText(vertexSource));
+			trace('Loading fragment source from argument...');
+			glFragmentSource = processFragmentSource(fragmentSource);
+		}
+
+		if (vertexSource == null)
+		{
+			var s = processVertexSource(DEFAULT_VERTEX_SOURCE);
+			glVertexSource = s;
 		}
 		else
 		{
-			trace('Loading vertex fragment source...');
-			glVertexSource = processVertexSource(DEFAULT_VERTEX_SOURCE);
+			var s = processVertexSource(vertexSource);
+			glVertexSource = s;
 		}
 
-		@:privateAccess
-		{
+		@:privateAccess {
 			// This tells the shader that the glVertexSource/glFragmentSource have been updated.
 			__glSourceDirty = true;
+			// This tells the shader that the shader properties are NOT reflected on this class automatically.
+			__isGenerated = false;
 		}
 
 		super();
 	}
-
+	
 	/**
 	 * Replace the `#pragma header` and `#pragma body` with the fragment shader header and body.
 	 */
 	function processFragmentSource(input:String):String
-		return input.replace("#pragma header", BASE_FRAGMENT_HEADER).replace("#pragma body", BASE_FRAGMENT_BODY);
+	{
+		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_FRAGMENT_HEADER);
+		result = StringTools.replace(result, PRAGMA_BODY, BASE_FRAGMENT_BODY);
+		return result;
+	}
 
 	/**
 	 * Replace the `#pragma header` and `#pragma body` with the vertex shader header and body.
 	 */
 	function processVertexSource(input:String):String
-		return input.replace("#pragma header", BASE_VERTEX_HEADER).replace("#pragma body", BASE_VERTEX_BODY);
+	{
+		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_VERTEX_HEADER);
+		result = StringTools.replace(result, PRAGMA_BODY, BASE_VERTEX_BODY);
+		return result;
+	}
+
+	function buildPrecisionHeaders():String {
+		return "#ifdef GL_ES
+				" + (precisionHint == FULL ? "#ifdef GL_FRAGMENT_PRECISION_HIGH
+					precision highp float;
+				#else
+					precision mediump float;
+				#endif" : "precision lowp float;")
+				+ "
+				#endif
+				";
+	}
 
 	/**
 	 * The parent function that initializes the shader.

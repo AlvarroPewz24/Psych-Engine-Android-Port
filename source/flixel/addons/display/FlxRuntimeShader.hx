@@ -197,7 +197,6 @@ class FlxRuntimeShader extends FlxShader
 	 */
 	public function new(fragmentSource:String = null, vertexSource:String = null):Void
 	{
-                
 		if (fragmentSource != null)
 		{
 			trace('Loading fragment source from argument...');
@@ -205,11 +204,11 @@ class FlxRuntimeShader extends FlxShader
 		}
 		else
 		{
-		trace('Loading default fragment source...');
-		glFragmentSource = processFragmentSource(DEFAULT_FRAGMENT_SOURCE);
+			trace('Loading default fragment source...');
+			glFragmentSource = processFragmentSource(DEFAULT_FRAGMENT_SOURCE);
 		}
 
-		if (vertexSource == null)
+		if (vertexSource != null)
 		{
 			trace('Loading vertex source from argument...');
 			glVertexSource = processVertexSource(Assets.getText(vertexSource));
@@ -220,45 +219,26 @@ class FlxRuntimeShader extends FlxShader
 			glVertexSource = processVertexSource(DEFAULT_VERTEX_SOURCE);
 		}
 
-		@:privateAccess {
+		@:privateAccess
+		{
 			// This tells the shader that the glVertexSource/glFragmentSource have been updated.
 			__glSourceDirty = true;
 		}
 
 		super();
 	}
-	
+
 	/**
 	 * Replace the `#pragma header` and `#pragma body` with the fragment shader header and body.
 	 */
 	function processFragmentSource(input:String):String
-	{
-		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_FRAGMENT_HEADER);
-		result = StringTools.replace(result, PRAGMA_BODY, BASE_FRAGMENT_BODY);
-		return result;
-	}
+		return input.replace("#pragma header", BASE_FRAGMENT_HEADER).replace("#pragma body", BASE_FRAGMENT_BODY);
 
 	/**
 	 * Replace the `#pragma header` and `#pragma body` with the vertex shader header and body.
 	 */
 	function processVertexSource(input:String):String
-	{
-		var result = StringTools.replace(input, PRAGMA_HEADER, BASE_VERTEX_HEADER);
-		result = StringTools.replace(result, PRAGMA_BODY, BASE_VERTEX_BODY);
-		return result;
-	}
-
-	function buildPrecisionHeaders():String {
-		return "#ifdef GL_ES
-				" + (precisionHint == FULL ? "#ifdef GL_FRAGMENT_PRECISION_HIGH
-					precision highp float;
-				#else
-					precision mediump float;
-				#endif" : "precision lowp float;")
-				+ "
-				#endif
-				";
-	}
+		return input.replace("#pragma header", BASE_VERTEX_HEADER).replace("#pragma body", BASE_VERTEX_BODY);
 
 	/**
 	 * The parent function that initializes the shader.

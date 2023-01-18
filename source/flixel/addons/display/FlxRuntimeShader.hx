@@ -6,9 +6,6 @@ import openfl.display.BitmapData;
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;
-import openfl.utils.Assets;
-
-using StringTools;
 
 /**
  * An wrapper for Flixel/OpenFL's shaders, which takes fragment and vertex source
@@ -230,7 +227,7 @@ class FlxRuntimeShader extends FlxShader
 
 		super();
 	}
-
+	
 	/**
 	 * Replace the `#pragma header` and `#pragma body` with the fragment shader header and body.
 	 */
@@ -296,7 +293,7 @@ class FlxRuntimeShader extends FlxShader
 			vertex = StringTools.replace(vertex, PRAGMA_VERSION, versionHeader);
 			var fragment = StringTools.replace(glFragmentSource, PRAGMA_PRECISION, precisionHeaders);
 			fragment = StringTools.replace(fragment, PRAGMA_VERSION, versionHeader);
-
+			
 			var id = vertex + fragment;
 
 			if (__context.__programs.exists(id)) {

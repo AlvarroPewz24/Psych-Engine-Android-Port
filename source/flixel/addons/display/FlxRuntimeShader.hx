@@ -6,6 +6,9 @@ import openfl.display.BitmapData;
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
 import openfl.display.ShaderParameterType;
+import openfl.utils.Assets;
+
+using StringTools;
 
 /**
  * An wrapper for Flixel/OpenFL's shaders, which takes fragment and vertex source

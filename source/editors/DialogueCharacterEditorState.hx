@@ -584,8 +584,8 @@ class DialogueCharacterEditorState extends MusicBeatState
 			if(UI_mainbox.selected_tab_id == 'Animations' && curSelectedAnim != null && character.dialogueAnimations.exists(curSelectedAnim)) {
 				var moved:Bool = false;
 				var animShit:DialogueAnimArray = character.dialogueAnimations.get(curSelectedAnim);
-				var controlArrayLoop:Array<Bool> = [FlxG.keys.justPressed.A, FlxG.keys.justPressed.W, FlxG.keys.justPressed.D, FlxG.keys.justPressed.S];
-				var controlArrayIdle:Array<Bool> = [FlxG.keys.justPressed.LEFT, FlxG.keys.justPressed.UP, FlxG.keys.justPressed.RIGHT, FlxG.keys.justPressed.DOWN];
+				var controlArrayLoop:Array<Bool> = [#if !android FlxG.keys.justPressed.A #else virtualPad.buttonLeft.justPressed #end, #if !android FlxG.keys.justPressed.W #else virtualPad.buttonUp.justPressed #end, #if !android FlxG.keys.justPressed.D #else virtualPad.buttonRight.justPressed #end, #if !android FlxG.keys.justPressed.S #else virtualPad.buttonDown.justPressed #end];
+				var controlArrayIdle:Array<Bool> = [#if !android FlxG.keys.justPressed.LEFT #else virtualPad.buttonLeft.justPressed #end, #if !android FlxG.keys.justPressed.UP #else virtualPad.buttonUp.justPressed #end, #if !android FlxG.keys.justPressed.RIGHT #else virtualPad.buttonRight.justPressed #end, #if !android FlxG.keys.justPressed.DOWN #else virtualPad.buttonDown.justPressed #end];
 				for (i in 0...controlArrayLoop.length) {
 					if(controlArrayLoop[i]) {
 						if(i % 2 == 1) {
@@ -623,7 +623,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 				camGame.zoom += elapsed * camGame.zoom;
 				if(camGame.zoom > 1) camGame.zoom = 1;
 			}
-			if(FlxG.keys.justPressed.H) {
+			if(#if !android FlxG.keys.justPressed.H #else virtualPad.buttonX.justPressed #end) {
 				if(UI_mainbox.selected_tab_id == 'Animations') {
 					currentGhosts++;
 					if(currentGhosts > 2) currentGhosts = 0;
@@ -669,7 +669,11 @@ class DialogueCharacterEditorState extends MusicBeatState
 					else if(curAnim >= character.jsonFile.animations.length) curAnim = 0;
 					
 					character.playAnim(character.jsonFile.animations[curAnim].anim);
+					#if !android
 					animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
+					#else
+					animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press Up or Down Button to scroll';
+					#end
 				}
 				lastTab = UI_mainbox.selected_tab_id;
 				currentGhosts = 0;
@@ -678,7 +682,8 @@ class DialogueCharacterEditorState extends MusicBeatState
 			if(UI_mainbox.selected_tab_id == 'Character')
 			{
 				var negaMult:Array<Int> = [1, -1];
-				var controlAnim:Array<Bool> = [FlxG.keys.justPressed.W, FlxG.keys.justPressed.S];
+				var controlAnim:Array<Bool> = [#if !android FlxG.keys.justPressed.W #else virtualPad.buttonUp.justPressed #end, #if !android FlxG.keys.justPressed.S #else virtualPad.buttonDown.justPressed #end];
+
 
 				if(controlAnim.contains(true))
 				{
@@ -694,11 +699,15 @@ class DialogueCharacterEditorState extends MusicBeatState
 							}
 						}
 					}
+					#if !android
 					animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
+					#else
+					animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press Up or Down Button to scroll';
+					#end
 				}
 			}
 
-			if(FlxG.keys.justPressed.ESCAPE) {
+			if(#if !android FlxG.keys.justPressed.ESCAPE #else FlxG.android.justReleased.BACK #end) {
 				MusicBeatState.switchState(new editors.MasterEditorMenu());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'), 1);
 				transitioning = true;

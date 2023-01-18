@@ -23,6 +23,7 @@ import flixel.addons.ui.FlxUITabMenu;
 import android.flixel.FlxButton;
 #else
 import flixel.ui.FlxButton;
+#end
 import openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;

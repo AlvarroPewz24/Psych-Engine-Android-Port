@@ -36,6 +36,7 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 Android Port Credits
 * DxGamer - Original port code
 * RenTheSylvee - Videos And Another Things
+* M.A. Jigsaw - ABSOLUTELY ALL THE FUCKING ANDROID PORTING CODE HI ILY UwU
 _____________________________________
 
 # Features

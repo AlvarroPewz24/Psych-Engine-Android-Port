@@ -200,31 +200,29 @@ class FlxRuntimeShader extends FlxShader
                 
 		if (fragmentSource != null)
 		{
-			trace('Loading default fragment source...');
-			glFragmentSource = processFragmentSource(DEFAULT_FRAGMENT_SOURCE);
+			trace('Loading fragment source from argument...');
+			glFragmentSource = processFragmentSource(Assets.getText(fragmentSource));
 		}
 		else
 		{
-			trace('Loading fragment source from argument...');
-			glFragmentSource = processFragmentSource(fragmentSource);
+		trace('Loading default fragment source...');
+		glFragmentSource = processFragmentSource(DEFAULT_FRAGMENT_SOURCE);
 		}
 
 		if (vertexSource == null)
 		{
-			var s = processVertexSource(DEFAULT_VERTEX_SOURCE);
-			glVertexSource = s;
+			trace('Loading vertex source from argument...');
+			glVertexSource = processVertexSource(Assets.getText(vertexSource));
 		}
 		else
 		{
-			var s = processVertexSource(vertexSource);
-			glVertexSource = s;
+			trace('Loading vertex fragment source...');
+			glVertexSource = processVertexSource(DEFAULT_VERTEX_SOURCE);
 		}
 
 		@:privateAccess {
 			// This tells the shader that the glVertexSource/glFragmentSource have been updated.
 			__glSourceDirty = true;
-			// This tells the shader that the shader properties are NOT reflected on this class automatically.
-			__isGenerated = false;
 		}
 
 		super();

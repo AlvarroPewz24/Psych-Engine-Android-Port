@@ -41,6 +41,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 	var box:FlxSprite;
 	var daText:TypedAlphabet = null;
 
+	#if !android
 	private static var TIP_TEXT_MAIN:String =
 	'JKLI - Move camera (Hold Shift to move 4x faster)
 	\nQ/E - Zoom out/in
@@ -56,6 +57,17 @@ class DialogueCharacterEditorState extends MusicBeatState
 	\nWASD - Move Looping animation offset (Red)
 	\nArrow Keys - Move Idle/Finished animation offset (Blue)
 	\nHold Shift to move offsets 10x faster';
+	#else
+	private static var TIP_TEXT_MAIN:String =
+	'X - Toggle Speech Bubble
+	\nA - Reset text';
+
+	private static var TIP_TEXT_OFFSET:String =
+	'X - Toggle Ghosts
+	\nArrow Buttons If You Hold C Button - Move Looping animation offset (Red)
+	\nArrow Buttons - Move Idle/Finished animation offset (Blue)
+	\nHold B to move offsets 10x faster';
+	#end
 
 	var tipText:FlxText;
 	var offsetLoopText:FlxText;
@@ -161,6 +173,12 @@ class DialogueCharacterEditorState extends MusicBeatState
 		addEditorBox();
 		FlxG.mouse.visible = true;
 		updateCharTypeBox();
+
+		#if android
+		addVirtualPad(LEFT_FULL, A_B_X_Y);
+		addPadCamera();
+		virtualPad.y = -300;
+		#end
 		
 		super.create();
 	}
@@ -385,17 +403,23 @@ class DialogueCharacterEditorState extends MusicBeatState
 		tab_group.add(yStepper);
 		tab_group.add(scaleStepper);
 		tab_group.add(noAntialiasingCheckbox);
-
+		
 		var reloadImageButton:FlxButton = new FlxButton(10, scaleStepper.y + 60, "Reload Image", function() {
 			reloadCharacter();
 		});
-		
+
+		#if !android
 		var loadButton:FlxButton = new FlxButton(reloadImageButton.x + 100, reloadImageButton.y, "Load Character", function() {
 			loadCharacter();
 		});
 		var saveButton:FlxButton = new FlxButton(loadButton.x, reloadImageButton.y - 25, "Save Character", function() {
 			saveCharacter();
 		});
+		#else
+		var saveButton:FlxButton = new FlxButton(reloadImageButton.x + 100, reloadImageButton.y, "Save Character", function() {
+			saveCharacter();
+		});
+		#end
 		tab_group.add(reloadImageButton);
 		#if !android
 		tab_group.add(loadButton);
